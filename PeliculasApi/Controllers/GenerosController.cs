@@ -14,7 +14,7 @@ namespace PeliculasApi.Controllers
     [ApiController]
 
     [Route("api/generos")]
-    public class GenerosController:ControllerBase
+    public class GenerosController : ControllerBase
     {
         private readonly ApplicationDbContext context;
         private readonly IMapper mapper;
@@ -35,12 +35,12 @@ namespace PeliculasApi.Controllers
             return dtos;
         }
 
-        [HttpGet("{id:int}",Name ="obtenerGenero")]
+        [HttpGet("{id:int}", Name = "obtenerGenero")]
         public async Task<ActionResult<GeneroDTO>> Get(int id)
         {
             var entidad = await context.Generos.FirstOrDefaultAsync(x => x.Id == id);
 
-            if(entidad == null)
+            if (entidad == null)
             {
                 return NotFound();
             }
@@ -52,7 +52,7 @@ namespace PeliculasApi.Controllers
         }
 
         [HttpPost]
-         
+
         public async Task<ActionResult> Post([FromBody] GeneroCreacionDTO generoCreacionDTO)
         {
             var entidad = mapper.Map<Genero>(generoCreacionDTO);
@@ -67,7 +67,7 @@ namespace PeliculasApi.Controllers
         //"nombre":"Acción"
         //}
 
-        [HttpPut("id")]
+        [HttpPut("{id}")]
 
         public async Task<ActionResult> Put(int id, [FromBody]GeneroCreacionDTO generoCreacionDTO)
         {
