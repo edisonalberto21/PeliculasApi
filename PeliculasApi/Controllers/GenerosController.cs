@@ -62,6 +62,10 @@ namespace PeliculasApi.Controllers
 
             return new CreatedAtRouteResult("obtenerGenero", new { id = generoDTO.Id }, generoDTO);
         }
+        //Post
+        //{
+        //"nombre":"Acción"
+        //}
 
         [HttpPut("id")]
 
@@ -80,9 +84,19 @@ namespace PeliculasApi.Controllers
 
         public async Task<ActionResult> Delete(int id)
         {
-            //var existe = await context.Generos
-            return Ok();
+            var existe = await context.Generos.AnyAsync(x => x.Id == id);
+
+            if (!existe)
+            {
+                return NotFound();
+            }
+
+            context.Remove(new Genero() { Id = id });
+            await context.SaveChangesAsync();
+
+            return NoContent();
+            
         }
-        //Cambio Commit
+       
     }
 }
