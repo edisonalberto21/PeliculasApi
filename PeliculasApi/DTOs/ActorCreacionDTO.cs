@@ -16,7 +16,7 @@ namespace PeliculasApi.DTOs
         public string Nombre { get; set; }
 
         public DateTime FechaNacimiento { get; set; }
-        [PesoImagenValidacion(PesoMaximoMegaBytes:1)]
+        [PesoImagenValidacion(PesoMaximoMegaBytes:6)]
         public IFormFile Foto { get; set; }
 
 
