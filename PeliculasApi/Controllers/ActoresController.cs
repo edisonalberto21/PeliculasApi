@@ -145,6 +145,7 @@ namespace PeliculasApi.Controllers
 
         [HttpDelete("{id}")]
 
+      //  [EnableCors("AllowOrigin")]
         public async Task<ActionResult> Delete(int id)
         {
             var existe = await context.Actores.AnyAsync(x => x.Id == id);
