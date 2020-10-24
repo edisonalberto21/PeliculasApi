@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
@@ -30,7 +31,10 @@ namespace PeliculasApi.Controllers
             this.mapper = mapper;
             this.almacenadorArchivos = almacenadorArchivos;
         }
+
+        
         [HttpGet]
+        
 
         public async Task<ActionResult<List<ActorDTO>>> Get([FromQuery] PaginacionDTO paginacionDTO)
         {

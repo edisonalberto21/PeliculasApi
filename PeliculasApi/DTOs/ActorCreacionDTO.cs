@@ -11,7 +11,7 @@ namespace PeliculasApi.DTOs
     public class ActorCreacionDTO: ActorPatchDTO
     {
         
-        [PesoImagenValidacion(PesoMaximoMegaBytes:6)]
+        [PesoImagenValidacion(PesoMaximoMegaBytes:10)]
         public IFormFile Foto { get; set; }
 
 
