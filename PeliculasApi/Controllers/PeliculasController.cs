@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PeliculasApi.DTOs;
@@ -99,7 +100,62 @@ namespace PeliculasApi.Controllers
             await contex.SaveChangesAsync();
             return NoContent();
         }
-             
+
+
+        [HttpPatch("{id}")]
+        public async Task<ActionResult> Patch(int id, [FromBody] JsonPatchDocument<PeliculaPatchDTO> patchDocument)
+        {
+            if (patchDocument == null)
+            {
+                return BadRequest();
+
+            }
+
+            var entidadDB = await contex.Peliculas.FirstOrDefaultAsync(x => x.Id == id);
+
+            if (entidadDB == null)
+            {
+                return NotFound();
+            }
+
+            var entidadDTO = mapper.Map<PeliculaPatchDTO>(entidadDB);
+
+            patchDocument.ApplyTo(entidadDTO, ModelState);
+
+            var esValido = TryValidateModel(entidadDTO);
+
+            if (!esValido)
+            {
+                return BadRequest(ModelState);
+            }
+
+            mapper.Map(entidadDTO, entidadDB);
+
+            await contex.SaveChangesAsync();
+
+            return NoContent();
+
+
+        }
+
+        [HttpDelete("{id}")]
+
+        //  [EnableCors("AllowOrigin")]
+        public async Task<ActionResult> Delete(int id)
+        {
+            var existe = await contex.Peliculas.AnyAsync(x => x.Id == id);
+
+            if (!existe)
+            {
+                return NotFound();
+            }
+
+            contex.Remove(new Pelicula() { Id = id });
+            await contex.SaveChangesAsync();
+
+            return NoContent();
+
+        }
 
 
 
