@@ -51,7 +51,7 @@ namespace PeliculasApi.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Post([FromBody]PeliculaCreacionDTO peliculaCreacionDTO)
+        public async Task<ActionResult> Post([FromForm] PeliculaCreacionDTO peliculaCreacionDTO)
         {
             var pelicula = mapper.Map<Pelicula>(peliculaCreacionDTO);
 
