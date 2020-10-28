@@ -66,7 +66,7 @@ namespace PeliculasApi.Controllers
                     pelicula.Poster = await almacenadorArchivos.GuardarArchivo(contenido, extension, contenedor, peliculaCreacionDTO.Poster.ContentType);
                 }
             }
-
+            AsignarOrdenActores(pelicula);
             contex.Add(pelicula);
             await contex.SaveChangesAsync();
             var peliculaDTO = mapper.Map<PeliculasDTO>(pelicula);
@@ -74,11 +74,25 @@ namespace PeliculasApi.Controllers
 
         }
 
+        private void AsignarOrdenActores(Pelicula pelicula)
+        {
+            if(pelicula.PeliculasActores != null)
+            {
+                for (int i = 0; i < pelicula.PeliculasActores.Count; i++)
+                {
+                    pelicula.PeliculasActores[i].Orden = i;
+                }
+            }
+        }
+
         [HttpPut("{id}")]
         public async Task<ActionResult> Put(int id, [FromForm] PeliculaCreacionDTO peliculaCreacionDTO)
         {
 
-            var peliculasDB = await contex.Peliculas.FirstOrDefaultAsync(x => x.Id == id);
+            var peliculasDB = await contex.Peliculas
+                .Include(x => x.PeliculasActores)
+                .Include(x => x.PeliculasGeneros)
+                .FirstOrDefaultAsync(x => x.Id == id);
             if (peliculasDB == null)
             {
                 return NotFound();
@@ -96,7 +110,7 @@ namespace PeliculasApi.Controllers
                     peliculasDB.Poster = await almacenadorArchivos.EditarArchivo(contenido, extension, contenedor, peliculasDB.Poster, peliculaCreacionDTO.Poster.ContentType);
                 }
             }
-
+            AsignarOrdenActores(peliculasDB);
             await contex.SaveChangesAsync();
             return NoContent();
         }
